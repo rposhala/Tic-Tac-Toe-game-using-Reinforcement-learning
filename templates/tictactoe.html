@@ -1,0 +1,160 @@
+<html>
+	<head>
+		<title>Tic Tac Toe</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body style="background-color: #ffccff">
+		<style type="text/css">
+			.ticdiv{
+				width:31%;
+				height:30%;
+				float:left;
+				border-style:solid;
+				border-width:1%
+			}
+		</style>
+		<script type="text/javascript">
+			var now = 'X';
+			// var counter = 0;
+			var playerinput = 'X';
+			var difficulty = 'easy';
+			var played = {
+				0:0,
+				1:0,
+				2:0,
+				3:0,
+				4:0,
+				5:0,
+				6:0,
+				7:0,
+				8:0,
+			};
+			var userName = "Human";
+			function startgame(){
+				document.getElementById("details").style.display = "none";
+				document.getElementById("game").style.display = "block";
+				userName = document.getElementById("username").value;
+				for(i=0;i<9;i++){
+					document.getElementById(""+i).innerHTML = "";
+					document.getElementById(""+i).style.backgroundColor = "transparent";
+					played[i] = 0;
+				}
+				if(document.getElementById("player1").checked){
+					playerinput='X';
+				}else{
+					playerinput='O';
+				}
+
+				if(document.getElementById("easy").checked){
+					difficulty='easy';
+				}else if(document.getElementById("medium").checked){
+					difficulty='medium';
+				}else{
+					difficulty='hard';
+				}
+
+				now='X';
+				
+				document.getElementById("nowplaying").textContent = 'Now Playing : '+now;
+				$.post("/start", {'userselect': playerinput,'difficulty':difficulty}, function(data){
+				      console.log(data);
+				      	if(playerinput=='O'){
+					     	 if(played[parseInt(data)]==0){
+					     	 	let color = "#99ccff";
+								if(now=='O')
+									color="#80ffd4";
+								document.getElementById(parseInt(data)).innerHTML = "<div style='width:100%;height:30%'></div><span style='font-size:2.5em;color:"+"black"+"'>"+now+"</span>";
+								document.getElementById(parseInt(data)).style.backgroundColor = color;
+								played[parseInt(data)] = 1;
+						  		}
+							  if(now=='X')
+								now='O';
+							  else
+								now='X';
+							  document.getElementById("nowplaying").textContent = 'Now Playing : '+now;
+					 }
+				});
+			};
+			function endgame(){
+				document.getElementById("details").style.display = "block";
+				document.getElementById("game").style.display = "none";
+			};
+			function play(num){
+				if(now==playerinput){
+					if(played[num]==0){
+						let color = "#99ccff";
+						if(now=='O')
+							color="#80ffd4";
+						document.getElementById(num).innerHTML = "<div style='width:100%;height:30%'></div><span style='font-size:2.5em;color: "+"black"+"'>"+now+"</span>";
+						document.getElementById(num).style.backgroundColor = color;
+						played[num] = 1;
+					}
+					if(now=='X')
+						now='O';
+					else
+						now='X';
+					document.getElementById("nowplaying").textContent = 'Now Playing : '+now;
+					$.post("/getPlace", {'userinput': num}, function(resp){
+						  data = resp['place']
+					      console.log(data);
+					      if(parseInt(data) != -1){
+						      if(played[parseInt(data)]==0){
+								let color = "#99ccff";
+								if(now=='O')
+									color="#80ffd4";
+								document.getElementById(parseInt(data)).innerHTML = "<div style='width:100%;height:30%'></div><span style='font-size:2.5em;color:"+"black"+"'>"+now+"</span>";
+								document.getElementById(parseInt(data)).style.backgroundColor = color;
+								played[parseInt(data)] = 1;
+							  }
+							 }
+							  if(now=='X')
+								now='O';
+							  else
+								now='X';
+							  document.getElementById("nowplaying").textContent = 'Now Playing : '+now;
+						  //}else{
+						  // if counter == 0{
+						  // 	counter = 1;
+							if(resp['w'] != ''){
+							  	let endMsg = resp['w']
+							  	if(endMsg=="Human wins!")
+							  		endMsg = userName+" wins !"
+							  	document.getElementById("nowplaying").textContent = endMsg;
+							  	for(i=0;i<9;i++)
+							  		played[i] =1;
+						  	}
+						// }
+
+					});
+				}
+			};
+		</script>
+		<div style="width:50%;height:70%;margin-left:25%;margin-top:7%;background-color: transparent;">
+			<div id="details" style="text-align:center;font-size: 2em">
+				<span>Enter Your Name </span><input type="text" id="username" style="margin-left:2%;width:40%;height: 5%;font-size: 0.75em" value="Human"/><br/><br/>
+				<input type="radio" name="player" value="X" id="player1" style="height: 5%" /><label for="player1"> Player 1 (X) </label>
+				<input type="radio" name="player" value="O" id="player2" style="height: 5%" checked /><label for="player2"> Player 2 (O) </label><br/><br/>
+				<input type="radio" name="level" value="easy" id="easy" style="height: 5%" /><label for="easy"> Easy</label>
+				<input type="radio" name="level" value="medium" id="medium" style="height: 5%" /><label for="medium"> Medium</label>
+				<input type="radio" name="level" value="hard" id="hard" style="height: 5%" checked/><label for="hard"> Hard</label><br/><br/>
+				<button onclick="startgame()" style="height: 10%;width:25%;font-size: 1em"> Start </button>
+			</div>
+			<div id="game" style="width:60%;height:80%;margin-left:20%;text-align: center">
+				<div class="ticdiv" onclick="play(0)" id="0"></div>
+				<div class="ticdiv" onclick="play(1)" id="1"></div>
+				<div class="ticdiv" onclick="play(2)" id="2"></div>
+				<div class="ticdiv" onclick="play(3)" id="3"></div>
+				<div class="ticdiv" onclick="play(4)" id="4"></div>
+				<div class="ticdiv" onclick="play(5)" id="5"></div>
+				<div class="ticdiv" onclick="play(6)" id="6"></div>
+				<div class="ticdiv" onclick="play(7)" id="7"></div>
+				<div class="ticdiv" onclick="play(8)" id="8"></div>
+				<button onclick="endgame()" style="width: 25%;height: 10%; font-size: 1.5em">Exit</button><br/><br/>
+				<span id="nowplaying" style="font-size: 2em">Now Playing : X</span>
+			</div>
+			<script type="text/javascript">
+				document.getElementById("game").style.display = "none";
+			</script>
+		</div>
+	</body>
+</html>
