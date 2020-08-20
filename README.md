@@ -1,4 +1,4 @@
-# Machine_learning
+# Tic Tac Toe using Reinforcement learning
 
 Game has been deployed on AWS server, below is the link for the game:
 
