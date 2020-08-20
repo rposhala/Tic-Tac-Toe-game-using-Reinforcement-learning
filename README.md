@@ -6,13 +6,13 @@ Agents are trained and their policies are saved at three intervals during the tr
 This project was deployed on AWS server. GitHub repository has all files related to the game and clear instructions to design and deploy the game. 
 Playing with the agent as player 2 or player 1 with difficulty level 'Hard', we can at most tie the game. In most of the cases, agent wins.
 
-**Game has been deployed on AWS server, below is the link for the game:
+**Game has been deployed on AWS server, below is the link for the game:**
 
 http://18.223.101.138:8080/
 
 Policies of both the players of each level are saved when the agents are trained previously so that each time the end user plays the game accessing the above link with no need to train the agent again and again.
 
-**Running the app in the local system:
+**Running the app in the local system:**
 
 Submitted saved policies, python source code file with name server.py along with a folder named template which has front end code with name tictactoe.html (basic structure of file placement for flask api to integrate both front and back end) should be placed in the same folder. And from terminal we need to execute the python code (server.py) from the above folder using command: 
 <b>python server.py</b> 
